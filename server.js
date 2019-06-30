@@ -2,6 +2,7 @@ const sendScreenshot = require('./sendScreenshot')
 const { web, rtm } = require('./client')
 const delay = (time) => new Promise((resolve) => setTimeout(resolve, time))
 const stopword = require('stopword')
+const app = require('express')()
 
 let self = undefined
 
@@ -127,3 +128,9 @@ rtm.on('message', async (event) => {
   console.log('connected!')
   console.log(self, team)
 })();
+
+app.listen(process.env.PORT || 3000)
+
+app.get('/', (req,res) => {
+  res.send('hello')
+})

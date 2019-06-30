@@ -1,7 +1,8 @@
 const { RTMClient } = require('@slack/rtm-api');
 const { WebClient } = require('@slack/web-api');
+let config
 try {
-  const config = require('./config.json')
+  config = require('./config.json')
 } catch (e) {
   console.log('no config. this is expected if running from heroku')
 }
