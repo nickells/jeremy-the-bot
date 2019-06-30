@@ -11,7 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@slack/events-api": "^2.2.0",
     "@slack/rtm-api": "^5.0.1",
     "express": "^4.17.1",
     "puppeteer": "^1.18.1",
