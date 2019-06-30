@@ -5,7 +5,13 @@ const { web } = require('./client')
 let browser = undefined
 
 const sendScreenshot = async (event, query) => {
-  if (!browser) browser = await puppeteer.launch()
+  if (!browser) browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      'no-sandbox',
+      'disable-setuid-sandbox',
+    ]
+  })
   const page = await browser.newPage()
   page.setViewport({
     width: 1280,

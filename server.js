@@ -129,6 +129,8 @@ rtm.on('message', async (event) => {
   console.log(self, team)
 })();
 
+
+// Set up a webserver 
 app.listen(process.env.PORT || 3000)
 
 app.get('/', (req,res) => {
