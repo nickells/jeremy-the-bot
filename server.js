@@ -53,6 +53,8 @@ rtm.on('reaction_added', async event => {
   }
 })
 
+
+
 rtm.on('message', async (event) => {
   if (!messageHistory[event.channel]) {
     messageHistory[event.channel] = []
@@ -60,11 +62,8 @@ rtm.on('message', async (event) => {
   if (messageHistory[event.channel] > 5) {
     messageHistory[event.channel].pop()
   }
-  
-  console.log(messageHistory[event.channel].map(item => item.text))
 
   try {
-    console.log(event.text)
     // Look something up
     if (event.text.match(/[W|w]hat means (.*)/)) {
       // React to the message
@@ -105,12 +104,47 @@ rtm.on('message', async (event) => {
       messageHistory[event.channel] = []
     }
 
+    // Self awareness
     else if (event.text.match(/[j|J]eremy/) || event.text.includes(self.id) ) {
       await web.reactions.add({
         channel: event.channel,
         timestamp: event.ts,
         name: 'wave'
       });
+    }
+    else if (
+      event.text.match(/[t|T]hanks/) 
+      && !event.text.match(/[n|N]o/) 
+      && messageHistory[event.channel][0]
+      && (
+        messageHistory[event.channel][0].username === self.name
+        || messageHistory[event.channel][0].user === self.id
+      ) 
+    ){
+      let options = [
+        'no worries',
+        'any time',
+        'you\'re welcome!'
+      ]
+      let text = options[Math.floor(Math.random() * options.length)]
+      await delay(1000)
+      await web.chat.postMessage({
+        text: text,
+        channel: event.channel
+      })
+    }
+    else if (event.text === 'hello jeremy') {
+      let options = [
+        'hey',
+        'hello',
+        'hi there!'
+      ]
+      let text = options[Math.floor(Math.random() * options.length)]
+      await delay(1000)
+      await web.chat.postMessage({
+        text: text,
+        channel: event.channel
+      })
     }
     
   } catch (error) {
@@ -121,18 +155,46 @@ rtm.on('message', async (event) => {
   messageHistory[event.channel].unshift(event)
 });
 
-(async () => {
-  // Connect to Slack
-  const { self: _self, team } = await rtm.start();
-  self = { ..._self }
-  console.log('connected!')
-  console.log(self, team)
-})();
 
 
 // Set up a webserver 
 app.listen(process.env.PORT || 3000)
 
+const boot = async () => {
+  const { self: _self, team } = await rtm.start();
+  self = { ..._self }
+  console.log('i am awake', self)
+}
+
+// Boot immediately
+boot()
+
 app.get('/', (req,res) => {
-  res.send('hello')
+  res.sendFile(__dirname + '/index.html')
+})
+
+app.get('/status', (req, res) => {
+  if (self !== undefined) {
+    console.log('send online')
+    res.send({
+      status: 'ONLINE'
+    })
+  }
+  else {
+    console.log('send offline')
+    res.send({
+      status: 'OFFLINE'
+    })
+  }
+})
+
+app.post('/start', async (req, res) => { 
+  await boot()
+  res.sendStatus(200)
+})
+
+app.post('/stop', async (req,res) => {
+  await rtm.disconnect();
+  self = undefined
+  res.sendStatus(200)
 })

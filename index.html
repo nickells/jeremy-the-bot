@@ -1,0 +1,59 @@
+<html>
+  
+  <body>
+    <button id="toggle">
+      Start
+    </button>
+    <span id="info"></span>
+
+    <script>
+      const toggle = document.getElementById('toggle')
+      const info = document.getElementById('info')
+      let isActive = false
+
+      const handleOnline = () => {
+        isActive = true
+        toggle.innerHTML = 'STOP'
+        info.innerHTML = 'Status: Online'
+      }
+
+      const handleOffline = () => {
+        isActive = false
+        toggle.innerHTML = 'START'
+        info.innerHTML = 'Status: Offline'
+      }
+
+      fetch('/status')
+      .then(res => {
+        return res.json()
+      })
+      .then(({status}) => {
+        if (status === 'ONLINE') {
+          handleOnline()
+        } else {
+          handleOffline()
+        }
+      }) 
+      
+      toggle.addEventListener('click', () => {
+        if (!isActive) {
+          fetch('/start', {
+            method: 'POST'
+          })
+          .then(res => {
+            handleOnline()
+          })
+        } else {
+          fetch('/stop', {
+            method: 'POST'
+          })
+          .then(res => {
+            handleOffline()
+          })
+          
+        }
+      })
+      
+    </script>
+  </body>
+</html>
