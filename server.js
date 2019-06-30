@@ -26,6 +26,7 @@ app.get('/', (req,res) => {
 })
 
 app.get('/status', (req, res) => {
+  console.log('got status ping')
   if (getSelf() !== undefined) {
     console.log('send online')
     res.send({
