@@ -1,6 +1,6 @@
 
 const puppeteer = require('puppeteer')
-const { web } = require('./client')
+const { web } = require('./slackClient')
 
 let browser = undefined
 

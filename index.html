@@ -23,17 +23,26 @@
         info.innerHTML = 'Status: Offline'
       }
 
-      fetch('/status')
-      .then(res => {
-        return res.json()
-      })
-      .then(({status}) => {
-        if (status === 'ONLINE') {
-          handleOnline()
-        } else {
+      const check = () => {
+        fetch('/status')
+        .then(res => {
+          return res.json()
+        })
+        .then(({status}) => {
+          if (status === 'ONLINE') {
+            handleOnline()
+          } else {
+            handleOffline()
+          }
+        })
+        .catch(err => {
           handleOffline()
-        }
-      }) 
+        })
+        .then( () => {
+          setTimeout(check, 20000)
+        })
+      }
+      check()
       
       toggle.addEventListener('click', () => {
         if (!isActive) {
