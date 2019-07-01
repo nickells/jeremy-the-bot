@@ -51,3 +51,7 @@ app.post('/stop', async (req,res) => {
   setSelf(undefined)
   res.sendStatus(200)
 })
+
+module.exports = {
+  boot
+}
