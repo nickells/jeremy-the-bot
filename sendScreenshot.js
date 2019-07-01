@@ -16,7 +16,7 @@ const sendScreenshot = async (event, query) => {
   })
   await page.goto(`https://www.google.com/search?q=${encodeURIComponent(query)}&tbm=isch`)
   let data = await page.screenshot()
-  // await browser.close()
+  await browser.close()
   
   await web.files.upload({
     channels: event.channel,
