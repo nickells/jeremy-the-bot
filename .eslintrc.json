@@ -34,7 +34,6 @@
         "block-spacing": "error",
         "brace-style": "off",
         "callback-return": "error",
-        "camelcase": "error",
         "capitalized-comments": "off",
         "class-methods-use-this": "error",
         "comma-dangle": "error",
@@ -43,7 +42,6 @@
             "error",
             "last"
         ],
-        "complexity": "error",
         "computed-property-spacing": [
             "error",
             "never"

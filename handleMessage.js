@@ -22,6 +22,14 @@ module.exports = async (event) => {
   console.log(messageHistory)
 
   try {
+    // thick -> thicc
+    if (event.text.match('ick')) {
+      await web.chat.postMessage({
+        text: event.text.replace(/ick/g, 'icc'),
+        channel: event.channel,
+        thread_ts: event.ts
+      })
+    }
     // Look something up
     if (event.text.match(/[W|w]hat means (.*)/)) {
       // React to the message
