@@ -12,7 +12,7 @@ module.exports = async (event) => {
   if (!messageHistory[event.channel]) {
     messageHistory[event.channel] = []
   }
-  if (messageHistory[event.channel] > 5) {
+  if (messageHistory[event.channel].length > 5) {
     messageHistory[event.channel].pop()
   }
 
