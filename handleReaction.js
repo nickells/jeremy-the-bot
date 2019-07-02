@@ -32,7 +32,7 @@ module.exports = async event => {
     await delay(3000)
     try {
       // React to the message, sometimes
-      if (Math.random() > 0.77) {
+      if (Math.random() > 0.5) {
         await web.reactions.add({
           channel: event.item.channel,
           timestamp: event.item.ts,
