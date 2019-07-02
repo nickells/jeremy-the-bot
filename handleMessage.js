@@ -23,9 +23,9 @@ module.exports = async (event) => {
 
   try {
     // thick -> thicc
-    if (event.text.match('ick')) {
+    if (event.text.match(/ick\b/g)) {
       await web.chat.postMessage({
-        text: event.text.replace(/ick/g, 'icc'),
+        text: event.text.replace(/ick\b/g, 'icc'),
         channel: event.channel,
         thread_ts: event.ts
       })
@@ -62,6 +62,7 @@ module.exports = async (event) => {
       && event.username !== self.name
       && messageHistory[event.channel][1]
       && messageHistory[event.channel][1].text === 'F'
+      && messageHistory[event.channel][1].username !== self.name
     ) {
       await web.chat.postMessage({
         text: 'F',
@@ -80,7 +81,7 @@ module.exports = async (event) => {
     }
     // Respond to "thanks" if someone says it to Jeremy
     if (
-      event.text.match(/[t|T]hanks/) 
+      ( event.text.match(/[t|T]hanks/) || event.text.match(/[n|N]ice/) )
       && !event.text.match(/[n|N]o/) 
       && messageHistory[event.channel][1]
       && (
