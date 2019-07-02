@@ -59,16 +59,16 @@ module.exports = async (event) => {
 
     // Pay respects
     else if (event.text === 'F' 
-      && event.username !== self.name
+      && event.subtype !== 'bot_message'
       && messageHistory[event.channel][1]
       && messageHistory[event.channel][1].text === 'F'
-      && messageHistory[event.channel][1].username !== self.name
+      && messageHistory[event.channel][1].subtype !== 'bot_message'
     ) {
       await web.chat.postMessage({
         text: 'F',
         channel: event.channel
       })
-      messageHistory[event.channel] = []
+      // messageHistory[event.channel] = []
     }
 
     // Self awareness
