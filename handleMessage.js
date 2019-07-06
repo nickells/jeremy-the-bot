@@ -83,6 +83,7 @@ module.exports = async (event) => {
         name: 'wave'
       });
     }
+    
     // Respond to "thanks" if someone says it to Jeremy
     if (
       ( event.text.match(/[t|T]hanks/) || event.text.match(/[n|N]ice/) )

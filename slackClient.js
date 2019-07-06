@@ -10,7 +10,7 @@ try {
 const token = process.env.SLACK_BOT_TOKEN || config.BOT_TOKEN;
 
 const rtm = new RTMClient(token)
-const web = new WebClient(token)
+const web = new WebClient(config.TOKEN)
 
 module.exports = {
   rtm,

@@ -1,6 +1,11 @@
 const puppeteer = require('puppeteer')
-const config = require('./config.json')
 const { web } = require('./slackClient')
+let config
+try {
+  config = require('./config.json')
+} catch (e) {
+  console.log('no config. this is expected if running from heroku')
+} 
 let emojiList = []
 
 const getDefaultEmoji = async () => {
