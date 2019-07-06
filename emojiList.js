@@ -25,7 +25,7 @@ const getDefaultEmoji = async () => {
 
 const getCustomEmoji = async () => {
   const customEmoji = await web.emoji.list({
-    token: process.env.TOKEN || config.token
+    token: process.env.TOKEN || config.TOKEN
   })
 
   return Object.keys(customEmoji.emoji)

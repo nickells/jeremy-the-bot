@@ -123,7 +123,7 @@ module.exports = async (event) => {
     // React to a message if it contains a word matching an emoji
     const emojiList = getEmojiList()
     const words = stopword.removeStopwords(event.text.toLowerCase().split(' '))
-    words.forEach(async word => {
+    for (let word of words) {
       if (emojiList.includes(word)) {
         await web.reactions.add({
           channel: event.channel,
@@ -131,7 +131,7 @@ module.exports = async (event) => {
           name: word
         });
       }
-    })
+    }
     
   } catch (error) {
     console.log('An error occurred', error);
