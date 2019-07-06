@@ -15,7 +15,7 @@ app.listen(process.env.PORT || 3000)
 
 const boot = async () => {
   const { self, team } = await rtm.start();
-  await gatherEmoji()
+  gatherEmoji()
   setSelf(self)
 }
 
