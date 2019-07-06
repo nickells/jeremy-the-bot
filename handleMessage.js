@@ -4,6 +4,7 @@ const messageHistory = require('./messageHistory')
 const sendScreenshot = require('./sendScreenshot')
 const { delay } = require('./util')
 const { web, rtm } = require('./slackClient')
+const { getEmojiList } = require('./emojiList')
 
 
 module.exports = async (event) => {
@@ -117,6 +118,19 @@ module.exports = async (event) => {
         channel: event.channel
       })
     }
+
+    // React to a message if it contains a word matching an emoji
+    const emojiList = getEmojiList()
+    const words = stopword.removeStopwords(event.text.toLowerCase().split(' '))
+    words.forEach(async word => {
+      if (emojiList.includes(word)) {
+        await web.reactions.add({
+          channel: event.channel,
+          timestamp: event.ts,
+          name: word
+        });
+      }
+    })
     
   } catch (error) {
     console.log('An error occurred', error);

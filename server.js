@@ -1,5 +1,6 @@
 const { web, rtm } = require('./slackClient')
 const handleMessage = require('./handleMessage')
+const { gatherEmoji } = require('./emojiList')
 const handleReaction = require('./handleReaction')
 const app = require('express')()
 const { getSelf, setSelf } = require('./self')
@@ -14,8 +15,8 @@ app.listen(process.env.PORT || 3000)
 
 const boot = async () => {
   const { self, team } = await rtm.start();
+  await gatherEmoji()
   setSelf(self)
-  console.log('i am awake', self)
 }
 
 // Boot immediately
