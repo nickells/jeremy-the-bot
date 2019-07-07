@@ -33,10 +33,13 @@ const getCustomEmoji = async () => {
 
 
 const gatherEmoji = async () => {
-  const defaultEmoji = await getDefaultEmoji()
+  // const defaultEmoji = await getDefaultEmoji()
   const customEmoji = await getCustomEmoji()
   
-  emojiList = [...defaultEmoji, ...customEmoji]
+  emojiList = [
+    // ...defaultEmoji,
+    ...customEmoji
+  ]
 }
 
 const getEmojiList = () => emojiList
