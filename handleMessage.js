@@ -123,8 +123,10 @@ module.exports = async (event) => {
     // React to a message if it contains a word matching an emoji
     const emojiList = getEmojiList()
     const words = stopword.removeStopwords(event.text.toLowerCase().split(' '))
+    await delay(1000)
     for (let word of words) {
       if (emojiList.includes(word)) {
+        await delay(300)
         await web.reactions.add({
           channel: event.channel,
           timestamp: event.ts,
