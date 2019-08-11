@@ -61,18 +61,31 @@ module.exports = async (event) => {
       await sendScreenshot(event, query)
     }
 
-    // Pay respects
-    else if (event.text === 'F' 
-      && event.subtype !== 'bot_message'
-      && messageHistory[event.channel][1]
-      && messageHistory[event.channel][1].text === 'F'
+    /*
+     * Pay respects
+     * if (event.text === 'F' 
+     *   && event.subtype !== 'bot_message'
+     *   && messageHistory[event.channel][1]
+     *   && messageHistory[event.channel][1].text === 'F'
+     *   && messageHistory[event.channel][1].subtype !== 'bot_message'
+     * ) {
+     *   await web.chat.postMessage({
+     *     text: 'F',
+     *     channel: event.channel
+     *   })
+     *   // messageHistory[event.channel] = []
+     * }
+     */
+
+    else if (
+      messageHistory[event.channel][1].text === event.text
       && messageHistory[event.channel][1].subtype !== 'bot_message'
+      && event.subtype !== 'bot_message'
     ) {
       await web.chat.postMessage({
-        text: 'F',
+        text: event.text,
         channel: event.channel
       })
-      // messageHistory[event.channel] = []
     }
 
     // Self awareness
@@ -106,7 +119,8 @@ module.exports = async (event) => {
         channel: event.channel
       })
     }
-    else if (event.text === 'respond_jerm') {
+    
+    if (event.text === 'respond_jerm') {
       let options = [
         'hey',
         'hello',
