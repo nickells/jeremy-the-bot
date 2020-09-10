@@ -20,7 +20,7 @@ module.exports = async (event) => {
   // Add message to queue
   messageHistory[event.channel].unshift(event)
 
-  console.log(messageHistory)
+  console.log("messageHistory: ", messageHistory)
 
   try {
 
@@ -47,7 +47,7 @@ module.exports = async (event) => {
     }
 
     // Look up the previous message
-    else if (event.text.match(/[W|w]hat[\'|\’]?s that/) && event.text.match(/[W|w]hat[\'|\’]?s that/).length) {
+    else if (event.text.includes(', pull that up') || (event.text.match(/[W|w]hat[\'|\’]?s that/) && event.text.match(/[W|w]hat[\'|\’]?s that/).length)) {
       // React to the message
       const lastMessage = messageHistory[event.channel][1]
       if (!lastMessage) return
@@ -78,7 +78,7 @@ module.exports = async (event) => {
      */
 
     else if (
-      messageHistory[event.channel][1].text === event.text
+      messageHistory[event.channel][1] && messageHistory[event.channel][1].text === event.text
       && messageHistory[event.channel][1].subtype !== 'bot_message'
       && event.subtype !== 'bot_message'
     ) {
@@ -89,24 +89,24 @@ module.exports = async (event) => {
     }
 
     // Self awareness
-    if (event.text.match(/[j|J]eremy/) || event.text.includes(self.id) ) {
+    if (event.text.match(/[j|J]eremy/) || event.text.includes(self.id)) {
       await web.reactions.add({
         channel: event.channel,
         timestamp: event.ts,
         name: 'wave'
       });
     }
-    
+
     // Respond to "thanks" if someone says it to Jeremy
     if (
-      ( event.text.match(/[t|T]hanks/) || event.text.match(/[n|N]ice/) )
-      && !event.text.match(/[n|N]o/) 
+      (event.text.match(/[t|T]hanks/) || event.text.match(/[n|N]ice/))
+      && !event.text.match(/[n|N]o/)
       && messageHistory[event.channel][1]
       && (
         messageHistory[event.channel][1].username === self.name
         || messageHistory[event.channel][1].user === self.id
-      ) 
-    ){
+      )
+    ) {
       let options = [
         'no worries',
         'any time',
@@ -119,7 +119,7 @@ module.exports = async (event) => {
         channel: event.channel
       })
     }
-    
+
     if (event.text === 'respond_jerm') {
       let options = [
         'hey',
@@ -148,7 +148,7 @@ module.exports = async (event) => {
         });
       }
     }
-    
+
   } catch (error) {
     console.log('An error occurred', error);
   }
