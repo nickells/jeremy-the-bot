@@ -61,6 +61,20 @@ module.exports = async (event) => {
       await sendScreenshot(event, query)
     }
 
+    else if (event.text.match(/[E|e]nhance/)) {
+      // React to the message
+      lastFile = messageHistory[event.channel].find(message => message.files);
+      if (!lastFile) return
+      await web.reactions.add({
+        channel: event.channel,
+        timestamp: event.ts,
+        name: 'eyes'
+      });
+      const query = lastFile.files.pop().name;
+      const firstImageOnly = true;
+      await sendScreenshot(event, query, firstImageOnly);
+    }
+
     /*
      * Pay respects
      * if (event.text === 'F' 
