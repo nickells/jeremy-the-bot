@@ -5,6 +5,7 @@ const sendScreenshot = require('./sendScreenshot')
 const { delay } = require('./util')
 const { web, rtm } = require('./slackClient')
 const { getEmojiList } = require('./emojiList')
+const { first } = require('lodash')
 
 
 module.exports = async (event) => {
@@ -20,7 +21,7 @@ module.exports = async (event) => {
   // Add message to queue
   messageHistory[event.channel].unshift(event)
 
-  console.log("messageHistory: ", messageHistory)
+  console.log('messageHistory: ', messageHistory)
 
   try {
 
@@ -46,16 +47,32 @@ module.exports = async (event) => {
       await sendScreenshot(event, query)
     }
 
-    // Look up the previous message
-    else if (event.text.includes(', pull that up') || (event.text.match(/[W|w]hat[\'|\’]?s that/) && event.text.match(/[W|w]hat[\'|\’]?s that/).length)) {
-      // React to the message
+    else if (event.text.toLowerCase().includes(', pull that up')) {
+      // Look up the previous message
       const lastMessage = messageHistory[event.channel][1]
       if (!lastMessage) return
-
+      
+      // React to the message
       await web.reactions.add({
         channel: event.channel,
         timestamp: event.ts,
         name: 'eyes'
+      });
+      const query = stopword.removeStopwords(lastMessage.text.split(' ')).join(' ')
+      const firstImageOnly = true;
+      await sendScreenshot(event, query, firstImageOnly)
+    }
+    else if (event.text.match(/[W|w]hat[\'|\’]?s that/) && event.text.match(/[W|w]hat[\'|\’]?s that/).length) {
+      // Look up the previous message
+      const lastMessage = messageHistory[event.channel][1]
+      if (!lastMessage) return
+      
+      // React to the message
+      await web.reactions.add({
+        channel: event.channel,
+        timestamp: event.ts,
+        name: 'eyes',
+        thread_ts: event.ts
       });
       const query = stopword.removeStopwords(lastMessage.text.split(' ')).join(' ')
       await sendScreenshot(event, query)
@@ -63,7 +80,7 @@ module.exports = async (event) => {
 
     else if (event.text.match(/[E|e]nhance/)) {
       // React to the message
-      lastFile = messageHistory[event.channel].find(message => message.files);
+      const lastFile = messageHistory[event.channel].find(message => message.files);
       if (!lastFile) return
       await web.reactions.add({
         channel: event.channel,
@@ -74,23 +91,6 @@ module.exports = async (event) => {
       const firstImageOnly = true;
       await sendScreenshot(event, query, firstImageOnly);
     }
-
-    /*
-     * Pay respects
-     * if (event.text === 'F' 
-     *   && event.subtype !== 'bot_message'
-     *   && messageHistory[event.channel][1]
-     *   && messageHistory[event.channel][1].text === 'F'
-     *   && messageHistory[event.channel][1].subtype !== 'bot_message'
-     * ) {
-     *   await web.chat.postMessage({
-     *     text: 'F',
-     *     channel: event.channel
-     *   })
-     *   // messageHistory[event.channel] = []
-     * }
-     */
-
     else if (
       messageHistory[event.channel][1] && messageHistory[event.channel][1].text === event.text
       && messageHistory[event.channel][1].subtype !== 'bot_message'

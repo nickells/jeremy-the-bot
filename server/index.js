@@ -4,6 +4,7 @@ const { gatherEmoji } = require('./emojiList')
 const handleReaction = require('./handleReaction')
 const app = require('express')()
 const { getSelf, setSelf } = require('./self')
+const path = require('path')
 
 rtm.on('reaction_added', handleReaction)
 
@@ -23,7 +24,7 @@ const boot = async () => {
 boot()
 
 app.get('/', (req,res) => {
-  res.sendFile(__dirname + '/index.html')
+  res.sendFile(path.join(__dirname, '../public/index.html'))
 })
 
 app.get('/status', (req, res) => {
