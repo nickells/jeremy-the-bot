@@ -18,8 +18,22 @@ const sendScreenshot = async (event, query, firstImageOnly) => {
     await page.click('div.islrc > div > a');
     const firstImageUrl = await page.evaluate(() => decodeURIComponent(document.getElementsByClassName('islrc')[0].firstChild.firstChild.href.match(/imgurl=(.*?)&/).pop()));
     await page.goto(firstImageUrl);
+    await page.evaluate(() => {
+      const img = document.getElementsByTagName('img')[0]
+      const { width, height } = img
+      const { innerWidth, innerHeight } = window
+      if (width > height) {
+        if (width < innerWidth) {
+          img.style.transform = `scale(${innerWidth / width})`
+        }
+      }
+      else if (height < innerHeight) {
+        img.style.transform = `scale(${innerHeight / height})`
+      }
+    })
   }
   let data = await page.screenshot()
+  console.log(data)
   await browser.close()
   
   await web.files.upload({
