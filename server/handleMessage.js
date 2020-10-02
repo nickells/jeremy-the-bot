@@ -46,6 +46,17 @@ module.exports = async (event) => {
       const query = event.text.match(/[W|w]hat means (.*)/)[1]
       await sendScreenshot(event, query)
     }
+    else if (event.text.match(/, pull up (.*)/)) {
+      // React to the message
+      await web.reactions.add({
+        channel: event.channel,
+        timestamp: event.ts,
+        name: 'eyes'
+      });
+      const query = event.text.match(/, pull up (.*)/)[1]
+      const firstImageOnly = true
+      await sendScreenshot(event, query, firstImageOnly)
+    }
 
     else if (event.text.toLowerCase().includes(', pull that up')) {
       // Look up the previous message
