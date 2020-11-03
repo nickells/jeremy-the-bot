@@ -1,4 +1,4 @@
-const { web, rtm } = require('./slackClient')
+const { web, rtm } = require('./server/slackClient')
 const args = require('args-parser')(process.argv)
 
 console.info(args)
