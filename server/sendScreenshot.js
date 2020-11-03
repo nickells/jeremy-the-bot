@@ -22,6 +22,24 @@ const getBufferFromRequest = (url) => {
   })
 }
 
+const getCroppedScreenshot = async (page, firstImageUrl) => {
+  await page.goto(firstImageUrl);
+  await page.evaluate(() => {
+    const img = document.getElementsByTagName('img')[0]
+    const { width, height } = img
+    const { innerWidth, innerHeight } = window
+    if (width > height) {
+      if (width < innerWidth) {
+        img.style.transform = `scale(${innerWidth / width})`
+      }
+    }
+    else if (height < innerHeight) {
+      img.style.transform = `scale(${innerHeight / height})`
+    }
+  })
+  return page.screenshot()
+}
+
 const sendScreenshot = async (event, query, firstImageOnly) => {
   const browser = await puppeteer.launch({
     headless: true,
@@ -41,9 +59,14 @@ const sendScreenshot = async (event, query, firstImageOnly) => {
   if (firstImageOnly) {
     await page.click('div.islrc > div > a');
     const firstImageUrl = await page.evaluate(() => decodeURIComponent(document.getElementsByClassName('islrc')[0].firstChild.firstChild.href.match(/imgurl=(.*?)&/).pop()));
-    data = await getBufferFromRequest(firstImageUrl)
-  } else {
-    data = await page.screenshot()
+    try {
+      data = await getBufferFromRequest(firstImageUrl)
+    }
+    catch (e) {
+      console.warn('error fetching', e)
+      data = await getCroppedScreenshot(page, firstImageUrl)
+    }
+    if (data.length === 0) data = await getCroppedScreenshot(page, firstImageUrl)
   }
 
   await browser.close()
