@@ -58,15 +58,25 @@ const sendScreenshot = async (event, query, firstImageOnly) => {
 
   if (firstImageOnly) {
     await page.click('div.islrc > div > a');
+    // Get image directly from url
     const firstImageUrl = await page.evaluate(() => decodeURIComponent(document.getElementsByClassName('islrc')[0].firstChild.firstChild.href.match(/imgurl=(.*?)&/).pop()));
     try {
       data = await getBufferFromRequest(firstImageUrl)
+
+      // if we end up in a redirect page, parse it and find the new url
+      const dataString = data.toString('utf8')
+      if (dataString.startsWith('<html>')) {
+        const possibleUrl = dataString.match(/href="(.*)"/)[1]
+        // try again
+        data = await getBufferFromRequest(possibleUrl)
+      }
     }
     catch (e) {
       console.warn('error fetching', e)
       data = await getCroppedScreenshot(page, firstImageUrl)
     }
     if (data.length === 0) data = await getCroppedScreenshot(page, firstImageUrl)
+
   }
 
   await browser.close()
