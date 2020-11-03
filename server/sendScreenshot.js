@@ -64,7 +64,6 @@ const sendScreenshot = async (event, query, firstImageOnly) => {
     try {
       data = await getBufferFromRequest(firstImageUrl)
 
-      // if we end up in a redirect page, parse it and find the new url
       const dataString = data.toString('utf8')
       if (!dataString.length || typeof dataString !== 'string') throw new Error('buffer was empty somehow')
       if (dataString.includes('html>')) {
@@ -73,11 +72,13 @@ const sendScreenshot = async (event, query, firstImageOnly) => {
     }
     catch (e) {
       console.warn(`warn: error fetching for prompt ${query}:`, e)
+      console.warn('falling back to page screenshot')
       data = await getCroppedScreenshot(page, firstImageUrl)
     }
-    if (data.length === 0) data = await getCroppedScreenshot(page, firstImageUrl)
 
     console.log('data is', data)
+  } else {
+    data = await page.screenshot()
   }
 
   await browser.close()
