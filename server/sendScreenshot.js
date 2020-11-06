@@ -2,7 +2,8 @@ const puppeteer = require('puppeteer')
 const { web } = require('./slackClient')
 
 const https = require('https');
-const http = require('http')
+const http = require('http');
+const { type } = require('os');
 
 const getBufferFromRequest = (url) => {
   return new Promise((resolve, reject) => {
@@ -63,20 +64,21 @@ const sendScreenshot = async (event, query, firstImageOnly) => {
     try {
       data = await getBufferFromRequest(firstImageUrl)
 
-      // if we end up in a redirect page, parse it and find the new url
       const dataString = data.toString('utf8')
-      if (dataString.startsWith('<html>')) {
-        const possibleUrl = dataString.match(/href="(.*)"/)[1]
-        // try again
-        data = await getBufferFromRequest(possibleUrl)
+      if (!dataString.length || typeof dataString !== 'string') throw new Error('buffer was empty somehow')
+      if (dataString.includes('html>')) {
+        throw new Error('data was not an image')
       }
     }
     catch (e) {
-      console.warn('error fetching', e)
+      console.warn(`warn: error fetching for prompt ${query}:`, e)
+      console.warn('falling back to page screenshot')
       data = await getCroppedScreenshot(page, firstImageUrl)
     }
-    if (data.length === 0) data = await getCroppedScreenshot(page, firstImageUrl)
 
+    console.log('data is', data)
+  } else {
+    data = await page.screenshot()
   }
 
   await browser.close()
