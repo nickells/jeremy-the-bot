@@ -7,7 +7,9 @@ const go = async () => {
   await rtm.start()
   await web.chat.postMessage({
     text: args.m,
-    channel: args.c
+    channel: args.c,
+    as_user: args.a,
+    username: args.u
   })
   process.exit(0)
 }
