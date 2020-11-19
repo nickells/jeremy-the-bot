@@ -109,7 +109,9 @@ module.exports = async (event) => {
     ) {
       await web.chat.postMessage({
         text: event.text,
-        channel: event.channel
+        channel: event.channel,
+        as_user: false,
+        // username: // getSelf().id ??
       })
     }
 
@@ -135,27 +137,35 @@ module.exports = async (event) => {
       let options = [
         'no worries',
         'any time',
-        'you\'re welcome!'
+        'you\'re welcome!',
+        'sure thing my dude',
+        'yeah!'
       ]
       let text = options[Math.floor(Math.random() * options.length)]
       await delay(1000)
       await web.chat.postMessage({
         text: text,
-        channel: event.channel
+        channel: event.channel,
+        as_user: false,
+        // username: // how can we determine jeremy's username, rather than his bot name?
       })
     }
 
-    if (event.text === 'respond_jerm') {
+    if (event.text === 'respond_jerm' | 
+        event.text === 'jeremy me boy') {
       let options = [
         'hey',
         'hello',
-        'hi there!'
+        'hi there!',
+        'hey daddy'
       ]
       let text = options[Math.floor(Math.random() * options.length)]
       await delay(1000)
       await web.chat.postMessage({
         text: text,
-        channel: event.channel
+        channel: event.channel,
+        as_user: false,
+        // username: getSelf().id doesn't work? or does it?
       })
     }
 
