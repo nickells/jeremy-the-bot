@@ -16,5 +16,3 @@ const go = async () => {
 }
 
 go()
-const self = getSelf()
-console.log(self.id)
