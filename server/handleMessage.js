@@ -6,7 +6,7 @@ const { delay } = require('./util')
 const { web, rtm } = require('./slackClient')
 const { getEmojiList } = require('./emojiList')
 const { first } = require('lodash')
-
+const cowsay = require('cowsay')
 
 module.exports = async (event) => {
   const self = getSelf()
@@ -116,6 +116,16 @@ module.exports = async (event) => {
         channel: event.channel,
         as_user: false,
         // username: // getSelf().id ??
+      })
+    }
+    else if (event.text.match(/, cowsay (.*)/)) {
+      const query = event.text.match(/, cowsay (.*)/)[1]
+      await web.chat.postMessage({
+        /* eslint-disable-next-line no-useless-concat */
+        text: '```' + '\n' + cowsay.say({ text: query }) + '\n' + '```',
+        channel: event.channel,
+        as_user: true,
+        username: 'cow'
       })
     }
 
