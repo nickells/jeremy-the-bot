@@ -103,9 +103,13 @@ module.exports = async (event) => {
       await sendScreenshot(event, query, firstImageOnly);
     }
     else if (
-      messageHistory[event.channel][1] && messageHistory[event.channel][1].text === event.text
-      && messageHistory[event.channel][1].subtype !== 'bot_message'
-      && event.subtype !== 'bot_message'
+      // last message exists
+      messageHistory[event.channel][1]
+      // double check last and this message are not from jeremy
+      && messageHistory[event.channel][1].subtype !== 'bot_message' 
+      && event.subtype !== 'bot_message' 
+      // this message is a subsection of the last message
+      && messageHistory[event.channel][1].text.includes(event.text)
     ) {
       await web.chat.postMessage({
         text: event.text,
