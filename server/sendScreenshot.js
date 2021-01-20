@@ -26,22 +26,15 @@ const getCroppedScreenshot = async (page, firstImageUrl) => {
   await page.evaluate(() => {
     const img = document.getElementsByTagName('img')[0]
     const { width, height } = img
-    page.setViewport({
-      width,
-      height
-    })
-
-    /*
-     * const { innerWidth, innerHeight } = window
-     * if (width > height) {
-     *   if (width < innerWidth) {
-     *     img.style.transform = `scale(${innerWidth / width})`
-     *   }
-     * }
-     * else if (height < innerHeight) {
-     *   img.style.transform = `scale(${innerHeight / height})`
-     * }
-     */
+    const { innerWidth, innerHeight } = window
+    if (width > height) {
+      if (width < innerWidth) {
+        img.style.transform = `scale(${innerWidth / width})`
+      }
+    }
+    else if (height < innerHeight) {
+      img.style.transform = `scale(${innerHeight / height})`
+    }
   })
   return page.screenshot()
 }
