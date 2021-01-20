@@ -5,8 +5,7 @@ const https = require('https');
 const http = require('http');
 const { type } = require('os');
 
-const getBufferFromRequest = (url) => {
-  return new Promise((resolve, reject) => {
+const getBufferFromRequest = (url) => new Promise((resolve, reject) => {
     const protocol = url.startsWith('https') ? https : http;
     
     protocol.get(url, resp => {
@@ -21,7 +20,6 @@ const getBufferFromRequest = (url) => {
       reject(e.message)
     });
   })
-}
 
 const getCroppedScreenshot = async (page, firstImageUrl) => {
   await page.goto(firstImageUrl);
@@ -61,22 +59,7 @@ const sendScreenshot = async (event, query, firstImageOnly) => {
     await page.click('div.islrc > div > a');
     // Get image directly from url
     const firstImageUrl = await page.evaluate(() => decodeURIComponent(document.getElementsByClassName('islrc')[0].firstChild.firstChild.href.match(/imgurl=(.*?)&/).pop()));
-    try {
-      data = await getBufferFromRequest(firstImageUrl)
-
-      const dataString = data.toString('utf8')
-      if (!dataString.length || typeof dataString !== 'string') throw new Error('buffer was empty somehow')
-      if (dataString.includes('html>')) {
-        throw new Error('data was not an image')
-      }
-    }
-    catch (e) {
-      console.warn(`warn: error fetching for prompt ${query}:`, e)
-      console.warn('falling back to page screenshot')
-      data = await getCroppedScreenshot(page, firstImageUrl)
-    }
-
-    console.log('data is', data)
+    data = await getCroppedScreenshot(page, firstImageUrl)
   } else {
     data = await page.screenshot()
   }
