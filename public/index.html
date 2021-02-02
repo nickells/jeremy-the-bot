@@ -1,26 +1,35 @@
 <html>
   
   <body>
-    <button id="toggle">
-      Start
-    </button>
-    <span id="info"></span>
+    <img src="/status.png" id="status" />
+    <div>
+      <button id="toggle">
+        Start
+      </button>
+      <span id="info"></span>
+    </div>
 
     <script>
       const toggle = document.getElementById('toggle')
       const info = document.getElementById('info')
+      const status = document.getElementById('status')
       let isActive = false
+
+      const resetImage = () => {
+        status.src = ''
+        status.src = `/status.png?${performance.now()}`
+      }
 
       const handleOnline = () => {
         isActive = true
-        toggle.innerHTML = 'STOP'
-        info.innerHTML = 'Status: Online'
+        toggle.innerHTML = 'GO OFFLINE'
+        resetImage()
       }
 
       const handleOffline = () => {
         isActive = false
-        toggle.innerHTML = 'START'
-        info.innerHTML = 'Status: Offline'
+        toggle.innerHTML = 'GO ONLINE'
+        resetImage()
       }
 
       const check = () => {

@@ -29,7 +29,8 @@ app.get('/', (req,res) => {
 
 app.get('/status', (req, res) => {
   console.log('got status ping')
-  if (getSelf() !== undefined) {
+  console.log(rtm.connected)
+  if (rtm.connected) {
     console.log('send online')
     res.send({
       status: 'ONLINE'
@@ -40,6 +41,14 @@ app.get('/status', (req, res) => {
     res.send({
       status: 'OFFLINE'
     })
+  }
+})
+
+app.get('/status.png', (req, res) => {
+  if (rtm.connected) {
+    res.sendFile(path.join(__dirname, '../public/online.png'))
+  } else {
+    res.sendFile(path.join(__dirname, '../public/offline.png'))
   }
 })
 

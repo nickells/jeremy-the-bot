@@ -10,3 +10,6 @@ There's a `config.json` of client secrets that you'll need to put in the root di
 ## Other projects
 Jeremy cameos in [spwank, the text adventure game.](https://github.com/HandSquare/spwank).
 To interact with Jeremy, you will also need the `config.json` mentioned above. Ask Nick!
+
+## Current Status
+![](jeremy-the-bot.herokuapp.com/status.png)
