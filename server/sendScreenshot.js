@@ -23,25 +23,16 @@ const getBufferFromRequest = (url) => new Promise((resolve, reject) => {
 
 const getCroppedScreenshot = async (page, firstImageUrl) => {
   await page.goto(firstImageUrl);
-  await page.evaluate(() => {
+  const { width, height } = await page.evaluate(() => {
     const img = document.getElementsByTagName('img')[0]
-    const { width, height } = img
-    page.setViewport({
-      width,
-      height
-    })
-
-    /*
-     * const { innerWidth, innerHeight } = window
-     * if (width > height) {
-     *   if (width < innerWidth) {
-     *     img.style.transform = `scale(${innerWidth / width})`
-     *   }
-     * }
-     * else if (height < innerHeight) {
-     *   img.style.transform = `scale(${innerHeight / height})`
-     * }
-     */
+    return {
+      width: img.width,
+      height: img.height,
+    }
+  })
+  page.setViewport({
+    width,
+    height
   })
   return page.screenshot()
 }
@@ -77,6 +68,7 @@ const sendScreenshot = async (event, query, firstImageOnly) => {
     channels: event.channel,
     file: data,
     filetype: 'auto',
+    text: query,
     filename: query
   })
 }
