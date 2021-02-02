@@ -12,4 +12,4 @@ Jeremy cameos in [spwank, the text adventure game.](https://github.com/HandSquar
 To interact with Jeremy, you will also need the `config.json` mentioned above. Ask Nick!
 
 ## Current Status
-![](http://jeremy-the-bot.herokuapp.com/status.png)
+![](http://jeremy-the-bot.herokuapp.com/status.png?cache=none)
